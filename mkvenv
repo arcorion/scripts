@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+# Set up a Python venv inside the current directory and activate it.
+
+if [ -d "venv" ]; then
+	echo "venv already exists"
+else
+	echo "Creating venv"
+	python -m venv venv
+	source venv/bin/activate
+	echo "Environment activated"
+fi

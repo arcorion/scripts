@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+# Make an empty py file and make it executable.
+# Command: mkpy <file_name.py>
+
+touch $1
+chmod +x $1
