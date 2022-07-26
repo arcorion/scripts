@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Add an idea to the end of an idea file
+# Default location is in ~/Documents/coding_ideas.txt
+#
+# Usage is: idea_add IDEA_STRING [FILE_LOCATION]
+# Note, takes escape sequences for IDEA_STRING
+#
+# There's extra documentation here - I am doing some new (to me)
+# things in bash and want to be able to come back to it later.
+
+# Change this to determine how many lines print at end
+tail_count=5
+
+# Try to use XDG first, if not, default to $HOME
+if [[ -d "$(xdg-user-dir DOCUMENTS)" ]]; then
+    idea_file="$(xdg-user-dir DOCUMENTS)/idea_file.txt"
+else
+    idea_file="${HOME}/idea_file.txt"
+fi
+
+# Replace idea file if a second argument passed.
+# Note, no error checking to speak of, figure
+# if there's a problem, it should be obvious when
+# it asks to save new file
+if [[ -n "$2" ]]; then
+    idea_file="$2"	
+fi
+
+# Create a file if an answer starting with 'y' is given to prompt
+if ! [[  -f $idea_file ]]; then
+    echo "${idea_file} not found.  Create? "
+    read answer
+    answer="$(tr '[:upper:]' '[:lower:]' <<< ${answer:0:1})"
+    if [[ "$answer" -eq "y" ]]; then
+        touch "$idea_file"
+	echo "Created ${idea_file}"
+    fi
+fi
+
+# Add the note to the end of the idea file, print the tail
+if [[  -f "$idea_file" ]]; then
+    echo -e "\n - $1" >> "$idea_file"
+    echo -e "\nIdea added, printing $tail_count lines"
+    tail -n $tail_count "$idea_file"
+fi
+
